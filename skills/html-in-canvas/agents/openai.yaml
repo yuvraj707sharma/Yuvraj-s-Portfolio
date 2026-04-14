@@ -1,0 +1,4 @@
+interface:
+  display_name: "HTML-in-Canvas"
+  short_description: "Guide for the HTML-in-Canvas proposal"
+  default_prompt: "Use $html-in-canvas to implement or review code that relies on the HTML-in-Canvas proposal."
