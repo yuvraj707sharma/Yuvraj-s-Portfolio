@@ -236,7 +236,7 @@ export const Input = () => {
               ref={inputRef}
               onKeyDown={handleSubmit}
               placeholder="What's your secret?"
-              className="h-16 border-0 px-0 text-xl! font-bold focus-visible:border-0 focus-visible:ring-0"
+              className="h-16 border-0 px-0 text-xl! font-bold focus-visible:border-0 focus-visible:ring-0 bg-white!"
             />
           </div>
         </canvas>
