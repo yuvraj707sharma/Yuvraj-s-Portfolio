@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { act, ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 
 interface PaintCanvas extends HTMLCanvasElement {
   requestPaint: () => void;
