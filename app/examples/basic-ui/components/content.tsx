@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 type Post = {
   title: string;
@@ -110,14 +110,25 @@ export const DrawElement = () => {
   const [windowOpen, setWindowOpen] = useState(true);
   const [zoomed, setZoomed] = useState(false);
   const [clock, setClock] = useState(() => formatClock(new Date()));
+  const elementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const id = setInterval(() => setClock(formatClock(new Date())), 1000);
     return () => clearInterval(id);
   }, []);
 
+  useLayoutEffect(() => {
+    const element = elementRef.current;
+    const originalParent = element?.parentNode;
+    return () => {
+      if (element && originalParent && element.parentNode !== originalParent) {
+        originalParent.appendChild(element);
+      }
+    };
+  }, []);
+
   return (
-    <div id="draw_element" className="p-2 -z-10 relative">
+    <div ref={elementRef} id="draw_element" className="relative -z-10 p-2">
       <div className="mac-menubar" onMouseLeave={() => setOpenMenu(null)}>
         <span className="mac-apple" onClick={() => setWindowOpen(true)}>
           ■
