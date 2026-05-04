@@ -7,10 +7,14 @@ import * as THREE from "three";
 
 import { cn } from "@/lib/utils";
 
-const clothWidth = 1;
-const clothHeight = 1;
+const PLANE_HEIGHT = 1;
 const ROOM_DEPTH = 2;
 const FOV = 50;
+
+const usePlaneWidth = () => {
+  const { size } = useThree();
+  return PLANE_HEIGHT * (size.width / Math.max(1, size.height));
+};
 
 // ─── Grid shader ──────────────────────────────────────────────────────────────
 
@@ -84,13 +88,13 @@ function clipHalf(
   return out;
 }
 
-function voronoiCell(seeds: P2[], i: number): P2[] {
+function voronoiCell(seeds: P2[], i: number, hw: number, hh: number): P2[] {
   const [sx, sy] = seeds[i];
   let poly: P2[] = [
-    [-0.5, -0.5],
-    [0.5, -0.5],
-    [0.5, 0.5],
-    [-0.5, 0.5],
+    [-hw, -hh],
+    [hw, -hh],
+    [hw, hh],
+    [-hw, hh],
   ];
   for (let j = 0; j < seeds.length; j++) {
     if (j === i || !poly.length) continue;
@@ -110,27 +114,56 @@ function polyCenter(poly: P2[]): P2 {
   return [x / poly.length, y / poly.length];
 }
 
-function cellGeo(poly: P2[], cx: number, cy: number): THREE.BufferGeometry {
+function cellGeo(
+  poly: P2[],
+  cx: number,
+  cy: number,
+  hw: number,
+  hh: number,
+  depth: number,
+): THREE.BufferGeometry {
+  const halfD = depth / 2;
+  const n = poly.length;
   const pos: number[] = [];
   const uv: number[] = [];
-  for (const [x, y] of poly) {
-    pos.push(x - cx, y - cy, 0);
-    uv.push(x + 0.5, y + 0.5);
-  }
   const idx: number[] = [];
-  for (let i = 1; i < poly.length - 1; i++) idx.push(0, i, i + 1);
+
+  // Front cap (z = +halfD), then back cap (z = -halfD). Both share the canvas UV.
+  for (const [x, y] of poly) {
+    pos.push(x - cx, y - cy, halfD);
+    uv.push((x + hw) / (2 * hw), (y + hh) / (2 * hh));
+  }
+  for (const [x, y] of poly) {
+    pos.push(x - cx, y - cy, -halfD);
+    uv.push((x + hw) / (2 * hw), (y + hh) / (2 * hh));
+  }
+
+  for (let i = 1; i < n - 1; i++) idx.push(0, i, i + 1);
+  for (let i = 1; i < n - 1; i++) idx.push(n, n + i + 1, n + i);
+
+  // Side quads — poly is CCW so (a, b, b2, a2) winds outward.
+  for (let i = 0; i < n; i++) {
+    const a = i;
+    const b = (i + 1) % n;
+    const a2 = a + n;
+    const b2 = b + n;
+    idx.push(a, b, b2, a, b2, a2);
+  }
+
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
   geo.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
   geo.setIndex(idx);
+  geo.computeVertexNormals();
   return geo;
 }
 
 // ─── Camera ───────────────────────────────────────────────────────────────────
 
-function CameraFit({ clothSize }: { clothSize: [number, number] }) {
+function CameraFit() {
   const { size } = useThree();
-  const [cw, ch] = clothSize;
+  const cw = usePlaneWidth();
+  const ch = PLANE_HEIGHT;
 
   // useFrame gives us a mutable camera ref — same pattern as the original orthographic fit.
   useFrame(({ camera }) => {
@@ -161,12 +194,13 @@ const roomMat = new THREE.ShaderMaterial({
 });
 
 function Room() {
+  const planeWidth = usePlaneWidth();
   useFrame(({ clock }) => {
     roomMat.uniforms.uTime.value = clock.elapsedTime;
   });
 
-  const hw = clothWidth / 2;
-  const hh = clothHeight / 2;
+  const hw = planeWidth / 2;
+  const hh = PLANE_HEIGHT / 2;
   const d = ROOM_DEPTH;
 
   return (
@@ -175,7 +209,7 @@ function Room() {
       <mesh
         geometry={planeGeo}
         position={[0, 0, -d]}
-        scale={[clothWidth, clothHeight, 1]}
+        scale={[planeWidth, PLANE_HEIGHT, 1]}
       >
         <meshBasicMaterial color="black" />
       </mesh>
@@ -185,7 +219,7 @@ function Room() {
         material={roomMat}
         position={[-hw, 0, -d / 2]}
         rotation={[0, Math.PI / 2, 0]}
-        scale={[d, clothHeight, 1]}
+        scale={[d, PLANE_HEIGHT, 1]}
       />
       {/* right wall */}
       <mesh
@@ -193,7 +227,7 @@ function Room() {
         material={roomMat}
         position={[hw, 0, -d / 2]}
         rotation={[0, -Math.PI / 2, 0]}
-        scale={[d, clothHeight, 1]}
+        scale={[d, PLANE_HEIGHT, 1]}
       />
       {/* ceiling */}
       <mesh
@@ -201,7 +235,7 @@ function Room() {
         material={roomMat}
         position={[0, hh, -d / 2]}
         rotation={[Math.PI / 2, 0, 0]}
-        scale={[clothWidth, d, 1]}
+        scale={[planeWidth, d, 1]}
       />
       {/* floor */}
       <mesh
@@ -209,7 +243,7 @@ function Room() {
         material={roomMat}
         position={[0, -hh, -d / 2]}
         rotation={[-Math.PI / 2, 0, 0]}
-        scale={[clothWidth, d, 1]}
+        scale={[planeWidth, d, 1]}
       />
     </>
   );
@@ -222,19 +256,23 @@ const LoginPlane = ({
 }: {
   loginCanvas: RefObject<HTMLCanvasElement | null>;
 }) => {
-  const { geo, mat, canvasTex } = useMemo(() => {
+  const planeWidth = usePlaneWidth();
+  const { mat, canvasTex } = useMemo(() => {
     const el = loginCanvas.current;
     const canvasTex = el ? new THREE.CanvasTexture(el) : null;
     if (canvasTex) canvasTex.colorSpace = THREE.SRGBColorSpace;
-    const geo = new THREE.PlaneGeometry(clothWidth, clothHeight);
     const mat = new THREE.MeshBasicMaterial({
       map: canvasTex,
       side: THREE.DoubleSide,
       transparent: true,
     });
-    return { geo, mat, canvasTex };
+    return { mat, canvasTex };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const geo = useMemo(
+    () => new THREE.PlaneGeometry(planeWidth, PLANE_HEIGHT),
+    [planeWidth],
+  );
 
   useFrame(() => {
     if (canvasTex) canvasTex.needsUpdate = true;
@@ -265,15 +303,17 @@ interface Frag {
   rz: number;
 }
 
-const SEED_COUNT = 42;
+const SEED_COUNT = 96;
 const GRAVITY = 1.4;
 const FADE_SPEED = 0.5;
+const FRAG_DEPTH = 0.025;
 
 const VoronoiExplosion = ({
   loginCanvas,
 }: {
   loginCanvas: RefObject<HTMLCanvasElement | null>;
 }) => {
+  const planeWidth = usePlaneWidth();
   const t0 = useRef(performance.now());
   const meshRefs = useRef<(THREE.Mesh | null)[]>([]);
 
@@ -282,17 +322,20 @@ const VoronoiExplosion = ({
     const canvasTex = el ? new THREE.CanvasTexture(el) : null;
     if (canvasTex) canvasTex.colorSpace = THREE.SRGBColorSpace;
 
+    const hw = planeWidth / 2;
+    const hh = PLANE_HEIGHT / 2;
+
     const seeds: P2[] = Array.from({ length: SEED_COUNT }, () => [
-      (Math.random() - 0.5) * 0.92,
-      (Math.random() - 0.5) * 0.92,
+      (Math.random() - 0.5) * 0.92 * planeWidth,
+      (Math.random() - 0.5) * 0.92 * PLANE_HEIGHT,
     ]);
 
     const frags: Frag[] = [];
     for (let i = 0; i < SEED_COUNT; i++) {
-      const poly = voronoiCell(seeds, i);
+      const poly = voronoiCell(seeds, i, hw, hh);
       if (poly.length < 3) continue;
       const [cx, cy] = polyCenter(poly);
-      const geo = cellGeo(poly, cx, cy);
+      const geo = cellGeo(poly, cx, cy, hw, hh, FRAG_DEPTH);
 
       const dist = Math.hypot(cx, cy);
       const base =
@@ -505,7 +548,7 @@ export const Scene = ({ loginCanvas, exploded }: SceneProps) => {
         camera={{ near: 0.01, far: 20, position: [0, 0, 1.2], fov: FOV }}
         className={cn(!exploded && "pointer-events-none!")}
       >
-        <CameraFit clothSize={[clothWidth, clothHeight]} />
+        <CameraFit />
         <Room />
         <Suspense fallback={null}>
           <Environment preset="studio" />

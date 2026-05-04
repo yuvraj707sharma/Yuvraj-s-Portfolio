@@ -26,7 +26,7 @@ export const LoginElement = ({ onLogin, loggedIn }: Props) => {
   };
 
   return (
-    <div className="bg-codrops h-full rounded-2xl p-2 backdrop-blur-sm">
+    <div className="bg-codrops rounded-2xl p-2 w-96 h-72">
       <div className="flex h-full flex-col rounded-2xl bg-white p-4">
         <header className="mb-6">
           <h1 className="text-codrops text-xl font-bold tracking-tight">

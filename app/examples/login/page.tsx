@@ -72,31 +72,32 @@ const Login = () => {
   return (
     <>
       <Header />
-      <GridBackground className="bg-codrops" />
 
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="relative overflow-hidden rounded-3xl border-2 border-white/10 shadow-2xl">
-          <canvas
-            ref={canvasRef}
-            // @ts-expect-error layoutsubtree is a canvas html-in-canvas attribute
-            layoutsubtree="true"
-            suppressHydrationWarning
-            className={cn(
-              "relative aspect-square h-96 w-96",
-              loggedIn && "pointer-events-none",
-            )}
-          >
-            <div ref={contentRef} className="h-96 w-96">
-              <LoginElement
-                onLogin={() => setLoggedIn(true)}
-                loggedIn={loggedIn}
-              />
-            </div>
-          </canvas>
-
-          {sceneReady && <Scene loginCanvas={canvasRef} exploded={loggedIn} />}
+      <canvas
+        ref={canvasRef}
+        // @ts-expect-error layoutsubtree is a canvas html-in-canvas attribute
+        layoutsubtree="true"
+        suppressHydrationWarning
+        className={cn(
+          "fixed inset-0 h-screen w-screen",
+          loggedIn && "pointer-events-none",
+        )}
+      >
+        <div
+          ref={contentRef}
+          className="bg-codrops relative h-screen w-screen overflow-hidden"
+        >
+          <GridBackground className="bg-codrops" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <LoginElement
+              onLogin={() => setLoggedIn(true)}
+              loggedIn={loggedIn}
+            />
+          </div>
         </div>
-      </div>
+      </canvas>
+
+      {sceneReady && <Scene loginCanvas={canvasRef} exploded={loggedIn} />}
 
       <Footer />
     </>
