@@ -8,8 +8,8 @@ import { GridBackground } from "@/components/ui/grid-background";
 const examples = [
   { slug: "getting-started", title: "Getting Started" },
   { slug: "vanish-input", title: "Vanish Input" },
-  { slug: "login", title: "Login" },
   { slug: "page-curl", title: "Page Curl" },
+  { slug: "login", title: "Login" },
   { slug: "basic-ui", title: "Basic UI" },
 ];
 

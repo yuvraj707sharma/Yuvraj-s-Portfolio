@@ -309,11 +309,13 @@ const FRAG_DEPTH = 0.025;
 
 const VoronoiExplosion = ({
   loginCanvas,
+  active,
 }: {
   loginCanvas: RefObject<HTMLCanvasElement | null>;
+  active: boolean;
 }) => {
   const planeWidth = usePlaneWidth();
-  const t0 = useRef(performance.now());
+  const t0 = useRef<number | null>(null);
   const meshRefs = useRef<(THREE.Mesh | null)[]>([]);
 
   const { frags, canvasTex, mat } = useMemo(() => {
@@ -373,6 +375,8 @@ const VoronoiExplosion = ({
   }, []);
 
   useFrame(() => {
+    if (!active) return;
+    if (t0.current === null) t0.current = performance.now();
     const t = (performance.now() - t0.current) / 1000;
     if (canvasTex) canvasTex.needsUpdate = true;
     mat.opacity = Math.max(0, 1 - t * FADE_SPEED);
@@ -397,6 +401,7 @@ const VoronoiExplosion = ({
     };
   }, [frags, canvasTex, mat]);
 
+  if (!active) return null;
   return (
     <>
       {frags.map((f, i) => (
@@ -556,11 +561,8 @@ export const Scene = ({ loginCanvas, exploded }: SceneProps) => {
           <Environment preset="studio" />
           <SuccessText rotationRef={rotationRef} interactive={exploded} />
         </Suspense>
-        {exploded ? (
-          <VoronoiExplosion key="exploded" loginCanvas={loginCanvas} />
-        ) : (
-          <LoginPlane key="normal" loginCanvas={loginCanvas} />
-        )}
+        {!exploded && <LoginPlane key="normal" loginCanvas={loginCanvas} />}
+        <VoronoiExplosion loginCanvas={loginCanvas} active={exploded} />
       </Canvas>
     </div>
   );
