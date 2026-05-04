@@ -2,9 +2,10 @@
 
 import { Center, Environment, Text3D } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import clsx from "clsx";
 import { RefObject, Suspense, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+
+import { cn } from "@/lib/utils";
 
 const clothWidth = 1;
 const clothHeight = 1;
@@ -305,6 +306,8 @@ const VoronoiExplosion = ({
           map: canvasTex,
           side: THREE.DoubleSide,
           transparent: true,
+          depthTest: false,
+          depthWrite: false,
         }),
         x0: cx,
         y0: cy,
@@ -360,6 +363,7 @@ const VoronoiExplosion = ({
           geometry={f.geo}
           material={f.mat}
           position={[f.x0, f.y0, 0]}
+          renderOrder={999}
         />
       ))}
     </>
@@ -499,7 +503,7 @@ export const Scene = ({ loginCanvas, exploded }: SceneProps) => {
           toneMapping: THREE.NoToneMapping,
         }}
         camera={{ near: 0.01, far: 20, position: [0, 0, 1.2], fov: FOV }}
-        className={clsx(!exploded && "pointer-events-none!")}
+        className={cn(!exploded && "pointer-events-none!")}
       >
         <CameraFit clothSize={[clothWidth, clothHeight]} />
         <Room />

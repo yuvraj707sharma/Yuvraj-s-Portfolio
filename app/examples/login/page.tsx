@@ -1,12 +1,12 @@
 "use client";
 
-import clsx from "clsx";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { GridBackground } from "@/components/ui/grid-background";
+import { cn } from "@/lib/utils";
 
 import { LoginElement } from "./components/login-element";
 
@@ -81,7 +81,7 @@ const Login = () => {
             // @ts-expect-error layoutsubtree is a canvas html-in-canvas attribute
             layoutsubtree="true"
             suppressHydrationWarning
-            className={clsx(
+            className={cn(
               "relative aspect-square h-96 w-96",
               loggedIn && "pointer-events-none",
             )}
