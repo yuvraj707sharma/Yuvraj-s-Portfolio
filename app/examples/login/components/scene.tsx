@@ -292,7 +292,6 @@ const LoginPlane = ({
 
 interface Frag {
   geo: THREE.BufferGeometry;
-  mat: THREE.MeshBasicMaterial;
   x0: number;
   y0: number;
   vx: number;
@@ -303,9 +302,9 @@ interface Frag {
   rz: number;
 }
 
-const SEED_COUNT = 96;
-const GRAVITY = 1.4;
-const FADE_SPEED = 0.5;
+const SEED_COUNT = 128;
+const GRAVITY = 1.5;
+const FADE_SPEED = 0.25;
 const FRAG_DEPTH = 0.025;
 
 const VoronoiExplosion = ({
@@ -317,10 +316,23 @@ const VoronoiExplosion = ({
   const t0 = useRef(performance.now());
   const meshRefs = useRef<(THREE.Mesh | null)[]>([]);
 
-  const { frags, canvasTex } = useMemo(() => {
+  const { frags, canvasTex, mat } = useMemo(() => {
     const el = loginCanvas.current;
     const canvasTex = el ? new THREE.CanvasTexture(el) : null;
     if (canvasTex) canvasTex.colorSpace = THREE.SRGBColorSpace;
+
+    // Single shared material. Glass feel from low roughness + high
+    // envMapIntensity picking up the studio environment.
+    const mat = new THREE.MeshStandardMaterial({
+      map: canvasTex,
+      side: THREE.DoubleSide,
+      transparent: true,
+      depthTest: false,
+      depthWrite: false,
+      roughness: 0.1,
+      metalness: 0.2,
+      envMapIntensity: 1,
+    });
 
     const hw = planeWidth / 2;
     const hh = PLANE_HEIGHT / 2;
@@ -345,13 +357,6 @@ const VoronoiExplosion = ({
 
       frags.push({
         geo,
-        mat: new THREE.MeshBasicMaterial({
-          map: canvasTex,
-          side: THREE.DoubleSide,
-          transparent: true,
-          depthTest: false,
-          depthWrite: false,
-        }),
         x0: cx,
         y0: cy,
         vx: Math.cos(base + jitter) * speed,
@@ -363,14 +368,14 @@ const VoronoiExplosion = ({
       });
     }
 
-    return { frags, canvasTex };
+    return { frags, canvasTex, mat };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useFrame(() => {
     const t = (performance.now() - t0.current) / 1000;
     if (canvasTex) canvasTex.needsUpdate = true;
-    const opacity = Math.max(0, 1 - t * FADE_SPEED);
+    mat.opacity = Math.max(0, 1 - t * FADE_SPEED);
 
     frags.forEach((f, i) => {
       const mesh = meshRefs.current[i];
@@ -381,19 +386,16 @@ const VoronoiExplosion = ({
         f.vz * t,
       );
       mesh.rotation.set(f.rx * t, f.ry * t, f.rz * t);
-      f.mat.opacity = opacity;
     });
   });
 
   useEffect(() => {
     return () => {
-      frags.forEach((f) => {
-        f.geo.dispose();
-        f.mat.dispose();
-      });
+      frags.forEach((f) => f.geo.dispose());
+      mat.dispose();
       canvasTex?.dispose();
     };
-  }, [frags, canvasTex]);
+  }, [frags, canvasTex, mat]);
 
   return (
     <>
@@ -404,7 +406,7 @@ const VoronoiExplosion = ({
             meshRefs.current[i] = el;
           }}
           geometry={f.geo}
-          material={f.mat}
+          material={mat}
           position={[f.x0, f.y0, 0]}
           renderOrder={999}
         />
