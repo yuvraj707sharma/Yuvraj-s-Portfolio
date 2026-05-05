@@ -1,5 +1,6 @@
 import "./globals.css";
 
+import { GoogleAnalytics } from "@next/third-parties/google";
 import clsx from "clsx";
 import type { Metadata } from "next";
 import { Geist, Literata } from "next/font/google";
@@ -24,6 +25,7 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
   <html lang="en" className={cn(clsx(geistSans.variable, literata.variable))}>
     <body>{children}</body>
+    <GoogleAnalytics gaId="G-234XRZV28M" />
   </html>
 );
 
