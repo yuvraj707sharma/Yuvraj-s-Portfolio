@@ -2,12 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-import { HtmlInCanvasGuard } from "@/components/ui/html-in-canvas-guard";
-
 import { Content } from "./components/content";
 import { ShaderCanvas } from "./components/shader";
 
-const GettingStartedInner = () => {
+const GettingStarted = () => {
   const [effectMode, setEffectMode] = useState("Default");
 
   useEffect(() => {
@@ -54,11 +52,5 @@ const GettingStartedInner = () => {
     </>
   );
 };
-
-const GettingStarted = () => (
-  <HtmlInCanvasGuard>
-    <GettingStartedInner />
-  </HtmlInCanvasGuard>
-);
 
 export default GettingStarted;

@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { GridBackground } from "@/components/ui/grid-background";
-import { HtmlInCanvasGuard } from "@/components/ui/html-in-canvas-guard";
 import { cn } from "@/lib/utils";
 
 import { LoginElement } from "./components/login-element";
@@ -71,7 +70,7 @@ const Login = () => {
   }, []);
 
   return (
-    <HtmlInCanvasGuard>
+    <>
       <Header />
 
       <canvas
@@ -101,7 +100,7 @@ const Login = () => {
       {sceneReady && <Scene loginCanvas={canvasRef} exploded={loggedIn} />}
 
       <Footer />
-    </HtmlInCanvasGuard>
+    </>
   );
 };
 
