@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { GridBackground } from "@/components/ui/grid-background";
+import { HtmlInCanvasGuard } from "@/components/ui/html-in-canvas-guard";
 
 import { BackPage,FrontPage } from "./components/pages";
 import { Source } from "./components/source";
@@ -18,7 +19,7 @@ const PageCurl = () => {
   const [showingBack, setShowingBack] = useState(false);
 
   return (
-    <>
+    <HtmlInCanvasGuard>
       <Header />
       <GridBackground className="bg-codrops" />
       <main className="absolute inset-0 flex flex-col items-center justify-center px-4 py-16">
@@ -36,7 +37,7 @@ const PageCurl = () => {
         </div>
       </main>
       <Footer />
-    </>
+    </HtmlInCanvasGuard>
   );
 };
 
