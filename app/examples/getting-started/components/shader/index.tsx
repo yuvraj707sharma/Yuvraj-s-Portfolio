@@ -5,7 +5,7 @@ import {
   Vignette,
 } from "@react-three/postprocessing";
 import { Fluid } from "@whatisjery/react-fluid-distortion";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { CanvasTexture, LinearFilter } from "three";
 
 import type { Effect } from "../filter";
@@ -19,23 +19,15 @@ const Rain = () => {
 const SourceTexture = () => {
   const { viewport } = useThree();
 
-  const canvas = document.getElementById("source") as HTMLCanvasElement;
-
   const texture = useMemo(() => {
+    const canvas = document.getElementById("source") as HTMLCanvasElement;
     const nextTexture = new CanvasTexture(canvas);
     nextTexture.minFilter = LinearFilter;
     nextTexture.magFilter = LinearFilter;
     return nextTexture;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canvas, viewport]);
+  }, []);
 
-  const textureRef = useRef(texture);
-
-  useEffect(() => {
-    textureRef.current = texture;
-  }, [texture]);
-
-  useFrame(() => (textureRef.current.needsUpdate = true));
+  useFrame(() => (texture.needsUpdate = true));
 
   useEffect(() => () => texture.dispose(), [texture]);
 
@@ -48,34 +40,29 @@ const SourceTexture = () => {
 };
 
 const EffectStack = ({ mode }: { mode: Effect }) => {
-  if (mode === "Default") return null;
-
-  if (mode === "Pixelated") {
-    return (
-      <EffectComposer>
-        <Pixelation granularity={8} />
-      </EffectComposer>
-    );
+  switch (mode) {
+    case "Pixelated":
+      return (
+        <EffectComposer>
+          <Pixelation granularity={8} />
+        </EffectComposer>
+      );
+    case "Rain":
+      return (
+        <EffectComposer>
+          <Rain />
+          <Vignette darkness={0.75} offset={0} />
+        </EffectComposer>
+      );
+    case "Fluid":
+      return (
+        <EffectComposer>
+          <Fluid fluidColor="#253ddd" />
+        </EffectComposer>
+      );
+    default:
+      return null;
   }
-
-  if (mode === "Rain") {
-    return (
-      <EffectComposer>
-        <Rain />
-        <Vignette darkness={0.75} offset={0} />
-      </EffectComposer>
-    );
-  }
-
-  if (mode === "Fluid") {
-    return (
-      <EffectComposer>
-        <Fluid fluidColor="#253ddd" />
-      </EffectComposer>
-    );
-  }
-
-  return null;
 };
 
 export const ShaderCanvas = ({ mode }: { mode: Effect }) => (
