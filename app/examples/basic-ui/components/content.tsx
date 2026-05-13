@@ -110,11 +110,18 @@ export const DrawElement = () => {
   const [windowOpen, setWindowOpen] = useState(true);
   const [zoomed, setZoomed] = useState(false);
   const [clock, setClock] = useState(() => formatClock(new Date()));
+  const [hasRendered, setHasRendered] = useState(false);
   const elementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const id = setInterval(() => setClock(formatClock(new Date())), 1000);
     return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    const onReady = () => setHasRendered(true);
+    window.addEventListener("mac-canvas-ready", onReady);
+    return () => window.removeEventListener("mac-canvas-ready", onReady);
   }, []);
 
   useLayoutEffect(() => {
@@ -128,7 +135,11 @@ export const DrawElement = () => {
   }, []);
 
   return (
-    <div ref={elementRef} id="draw_element" className="relative -z-10 p-2">
+    <div
+      ref={elementRef}
+      id="draw_element"
+      className={`relative p-2 ${hasRendered ? "" : "-z-10"}`}
+    >
       <div className="mac-menubar" onMouseLeave={() => setOpenMenu(null)}>
         <span className="mac-apple" onClick={() => setWindowOpen(true)}>
           ■

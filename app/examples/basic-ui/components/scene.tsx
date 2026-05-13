@@ -2,7 +2,6 @@
 
 import {
   ContactShadows,
-  Environment,
   Float,
   OrbitControls,
   Stage,
@@ -48,6 +47,7 @@ const Mac = () => {
   }, [interactions, gl, camera]);
 
   useEffect(() => {
+    window.dispatchEvent(new Event("mac-canvas-ready"));
     return () => {
       material.uniforms.map.value?.dispose();
     };
