@@ -2,6 +2,8 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import { cn } from "@/lib/utils";
+
 type Post = {
   title: string;
   category: string;
@@ -104,7 +106,7 @@ const formatClock = (d: Date) => {
   return `${days[d.getDay()]} ${hh}:${m} ${ampm}`;
 };
 
-export const DrawElement = () => {
+export const ComputerScreen = () => {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [selectedPost, setSelectedPost] = useState<string | null>(null);
   const [windowOpen, setWindowOpen] = useState(true);
@@ -137,8 +139,8 @@ export const DrawElement = () => {
   return (
     <div
       ref={elementRef}
-      id="draw_element"
-      className={`relative p-2 ${hasRendered ? "" : "-z-10"}`}
+      id="computer_screen"
+      className={cn("relative p-2", hasRendered ? "" : "-z-10")}
     >
       <div className="mac-menubar" onMouseLeave={() => setOpenMenu(null)}>
         <span className="mac-apple" onClick={() => setWindowOpen(true)}>
@@ -147,7 +149,7 @@ export const DrawElement = () => {
         {menuItems.map((m) => (
           <span
             key={m}
-            className={`mac-menu ${openMenu === m ? "is-open" : ""}`}
+            className={cn("mac-menu", openMenu === m && "is-open")}
             onMouseEnter={() => openMenu && setOpenMenu(m)}
             onClick={() => setOpenMenu(openMenu === m ? null : m)}
           >

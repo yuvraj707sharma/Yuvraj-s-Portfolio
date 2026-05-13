@@ -1,61 +1,44 @@
 "use client";
 
-import {
-  ContactShadows,
-  Float,
-  OrbitControls,
-  Stage,
-} from "@react-three/drei";
+import { ContactShadows, Float, OrbitControls, Stage } from "@react-three/drei";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
-import { Suspense, useEffect, useMemo, useRef } from "react";
-import { HTMLTexture, Mesh } from "three";
+import { Suspense, useEffect, useRef } from "react";
+import { HTMLTexture, Mesh, type ShaderMaterial } from "three";
 import { InteractionManager } from "three/addons/interaction/InteractionManager.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 import { screenMaterial } from "./crt-effect";
+
+type ScreenMaterial = ShaderMaterial & { map: HTMLTexture | null };
+const material = screenMaterial as ScreenMaterial;
 
 const Mac = () => {
   const gltf = useLoader(GLTFLoader, "/mac.glb");
   const { gl, camera } = useThree();
   const screenRef = useRef<Mesh>(null);
 
-  useEffect(() => {
-    gltf.scene.traverse((obj) => {
-      if (obj instanceof Mesh) {
-        obj.castShadow = true;
-        obj.receiveShadow = true;
-      }
-    });
-  }, [gltf]);
+  const interactions = useRef<InteractionManager | null>(null);
 
-  const { material, interactions } = useMemo(() => {
-    const element = document.getElementById("draw_element") as HTMLElement;
+  useEffect(() => {
+    const element = document.getElementById("computer_screen");
+    if (!element) throw new Error("#computer_screen element not found");
 
     const texture = new HTMLTexture(element);
 
-    screenMaterial.uniforms.map.value = texture;
-    (screenMaterial as unknown as { map: HTMLTexture }).map = texture;
+    interactions.current = new InteractionManager();
 
-    const manager = new InteractionManager();
-    return { material: screenMaterial, interactions: manager };
-  }, []);
+    material.uniforms.map.value = texture;
+    material.map = texture;
 
-  useEffect(() => {
-    interactions.connect(gl, camera);
-    if (screenRef.current) interactions.add(screenRef.current);
-    return () => interactions.disconnect();
-  }, [interactions, gl, camera]);
+    interactions.current.connect(gl, camera);
+    if (screenRef.current) interactions.current.add(screenRef.current);
 
-  useEffect(() => {
     window.dispatchEvent(new Event("mac-canvas-ready"));
-    return () => {
-      material.uniforms.map.value?.dispose();
-    };
-  }, [material]);
+  }, [gl, camera]);
 
   useFrame(({ clock }) => {
     material.uniforms.uTime.value = clock.elapsedTime;
-    interactions.update();
+    interactions.current?.update();
   });
 
   return (
@@ -73,8 +56,8 @@ const Mac = () => {
   );
 };
 
-export const MacScene = () => (
-  <div className="fixed inset-0 h-svh">
+export const Scene = () => (
+  <main className="fixed inset-0 h-svh">
     <Canvas
       shadows
       dpr={[1, 2]}
@@ -109,5 +92,5 @@ export const MacScene = () => (
         maxPolarAngle={Math.PI / 2}
       />
     </Canvas>
-  </div>
+  </main>
 );

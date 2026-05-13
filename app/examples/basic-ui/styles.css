@@ -1,6 +1,6 @@
 /* Classic Macintosh System 1 aesthetic — black & white, Chicago-ish */
 
-#draw_element {
+#computer_screen {
   width: 900px;
   height: 600px;
   background-color: #c4c4c4;
@@ -17,7 +17,7 @@
   flex-direction: column;
 }
 
-#draw_element * {
+#computer_screen * {
   box-sizing: border-box;
 }
 
