@@ -3,46 +3,74 @@
 @import "shadcn/tailwind.css";
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.488 0.243 264.376);
-  --primary-foreground: oklch(0.97 0.014 254.604);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.546 0.245 262.881);
-  --sidebar-primary-foreground: oklch(0.97 0.014 254.604);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --font-sans:
+    "Inter", "Avenir Next", "Segoe UI", "SF Pro Text", "Helvetica Neue", Arial,
+    sans-serif;
+  --font-serif: "Literata", "Iowan Old Style", "Baskerville", "Times New Roman", serif;
+
+  --background: oklch(0.97 0.01 86);
+  --foreground: oklch(0.23 0.02 36);
+  --card: oklch(0.99 0.005 85);
+  --card-foreground: oklch(0.24 0.02 35);
+  --popover: oklch(0.99 0.005 85);
+  --popover-foreground: oklch(0.24 0.02 35);
+  --primary: oklch(0.69 0.16 42);
+  --primary-foreground: oklch(0.98 0.01 90);
+  --secondary: oklch(0.95 0.01 75);
+  --secondary-foreground: oklch(0.28 0.02 35);
+  --muted: oklch(0.93 0.01 80);
+  --muted-foreground: oklch(0.46 0.02 38);
+  --accent: oklch(0.93 0.01 80);
+  --accent-foreground: oklch(0.24 0.02 35);
+  --destructive: oklch(0.57 0.2 27);
+  --border: oklch(0.87 0.01 65);
+  --input: oklch(0.88 0.01 65);
+  --ring: oklch(0.69 0.16 42);
+  --radius: 0.7rem;
+
+  --sidebar: var(--card);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+
+  --chart-1: oklch(0.68 0.16 42);
+  --chart-2: oklch(0.58 0.13 27);
+  --chart-3: oklch(0.51 0.09 11);
+  --chart-4: oklch(0.42 0.06 32);
+  --chart-5: oklch(0.34 0.03 35);
+}
+
+.dark {
+  --background: oklch(0.2 0.02 280);
+  --foreground: oklch(0.94 0.01 100);
+  --card: oklch(0.24 0.02 282);
+  --card-foreground: oklch(0.94 0.01 100);
+  --popover: oklch(0.23 0.02 282);
+  --popover-foreground: oklch(0.94 0.01 100);
+  --primary: oklch(0.7 0.16 42);
+  --primary-foreground: oklch(0.17 0.02 280);
+  --secondary: oklch(0.3 0.02 280);
+  --secondary-foreground: oklch(0.93 0.01 100);
+  --muted: oklch(0.3 0.02 280);
+  --muted-foreground: oklch(0.78 0.01 120);
+  --accent: oklch(0.3 0.02 280);
+  --accent-foreground: oklch(0.93 0.01 100);
+  --destructive: oklch(0.62 0.2 27);
+  --border: oklch(0.37 0.02 280);
+  --input: oklch(0.36 0.02 280);
+  --ring: oklch(0.7 0.16 42);
 }
 
 @theme base {
-  --color-codrops: #253ddd;
+  --color-codrops: #f17f52;
 }
 
 @theme inline {
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-serif);
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -89,10 +117,23 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   html {
     @apply h-full antialiased;
   }
+
   body {
     @apply bg-background text-foreground font-sans;
+    background-image:
+      radial-gradient(circle at 15% 15%, rgba(241, 127, 82, 0.14), transparent 45%),
+      radial-gradient(circle at 85% 0%, rgba(241, 127, 82, 0.1), transparent 40%),
+      linear-gradient(to bottom, rgba(250, 246, 240, 1), rgba(247, 242, 235, 1));
+  }
+
+  .dark body {
+    background-image:
+      radial-gradient(circle at 15% 15%, rgba(241, 127, 82, 0.18), transparent 45%),
+      radial-gradient(circle at 85% 0%, rgba(241, 127, 82, 0.1), transparent 40%),
+      linear-gradient(to bottom, rgba(24, 24, 28, 1), rgba(19, 19, 24, 1));
   }
 }
