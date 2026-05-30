@@ -1,35 +1,24 @@
-# yuvraj.dev — Portfolio
+# Yuvraj’s Portfolio (yuvraj.dev)
 
-This repository contains the source for **yuvraj.dev**, the portfolio of **Yuvraj Sharma**.
+This repository contains the **Next.js** portfolio for **Yuvraj Sharma** (root app), plus bundled creative-dev resources and experiments (Codrops-style demos) that are integrated into the live site.
 
-## Stack
-- Next.js (App Router)
-- Tailwind CSS
-- Three.js / React Three Fiber (hero + visual effects)
-- Motion (micro-interactions)
+## Site routes
 
-## Pages
-- `/` — main single-page portfolio
-- `/resume` — interactive resume page
-- `/labs` — experiments & inspirations (Codrops / WebGL)
+- `/` — main portfolio (hero + projects + about + contact)
+- `/resume` — resume page
+- `/labs` — interactive experiments & references
 
-## Included resources (used in the site)
-This repo includes and actively uses code/assets inspired by or adapted from:
-- `three-html-to-canvas/` (Hero HTML→Canvas / WebGL concepts)
-- `TextClipScroll/` (scroll-driven clip-path typography)
-- `WebGPU-clair-obscur-gommage-codrops/` (dissolve / gommage-inspired transitions)
+## Included resources used in the site
 
-External inspiration resources:
-- Codrops (tympanus.net/codrops)
-- CodePens by damarberlari
-- Cullen Webber HTML→Canvas demo
-- dextersulit.com (layout/motion inspiration)
+- `three-html-to-canvas/` — used for the hero “HTML → Canvas” / WebGL visual treatment
+- `TextClipScroll/` — used for scroll-driven clip-path typography sections
+- `WebGPU-clair-obscur-gommage-codrops/` — used for dissolve / gommage-inspired transitions
 
-## Development
+## Local development
+
 ```bash
 npm install
 npm run dev
 ```
 
-## Notes
-Project thumbnails and additional content are WIP.
+Open http://localhost:3000
