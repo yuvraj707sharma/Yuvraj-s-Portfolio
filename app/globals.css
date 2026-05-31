@@ -16,6 +16,7 @@
   --popover-foreground: oklch(0.24 0.02 35);
   --primary: oklch(0.55 0.18 255);
   --primary-foreground: oklch(0.98 0.01 90);
+  --signature: oklch(0.68 0.17 38);
   --secondary: oklch(0.95 0.01 75);
   --secondary-foreground: oklch(0.28 0.02 35);
   --muted: oklch(0.93 0.01 80);
@@ -51,7 +52,7 @@
   --card-foreground: oklch(0.94 0.01 100);
   --popover: oklch(0.23 0.02 282);
   --popover-foreground: oklch(0.94 0.01 100);
-  --primary: oklch(0.7 0.16 42);
+  --primary: oklch(0.67 0.14 252);
   --primary-foreground: oklch(0.17 0.02 280);
   --secondary: oklch(0.3 0.02 280);
   --secondary-foreground: oklch(0.93 0.01 100);
@@ -62,7 +63,8 @@
   --destructive: oklch(0.62 0.2 27);
   --border: oklch(0.37 0.02 280);
   --input: oklch(0.36 0.02 280);
-  --ring: oklch(0.7 0.16 42);
+  --ring: oklch(0.67 0.14 252);
+  --signature: oklch(0.72 0.15 38);
 }
 
 @theme base {
@@ -98,6 +100,7 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-signature: var(--signature);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -130,10 +133,15 @@
       linear-gradient(to bottom, rgba(250, 246, 240, 1), rgba(247, 242, 235, 1));
   }
 
+  ::selection {
+    background: color-mix(in oklab, var(--signature) 28%, transparent);
+    color: var(--foreground);
+  }
+
   .dark body {
     background-image:
-      radial-gradient(circle at 15% 15%, rgba(241, 127, 82, 0.18), transparent 45%),
-      radial-gradient(circle at 85% 0%, rgba(241, 127, 82, 0.1), transparent 40%),
+      radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.2), transparent 45%),
+      radial-gradient(circle at 85% 0%, rgba(241, 127, 82, 0.09), transparent 40%),
       linear-gradient(to bottom, rgba(24, 24, 28, 1), rgba(19, 19, 24, 1));
   }
 }
