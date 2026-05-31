@@ -94,6 +94,30 @@ export const HeroCanvas = () => {
   const sourceRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [profileSrc, setProfileSrc] = useState(PRIMARY_PROFILE_IMAGE);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const checkDark = () => setIsDark(document.documentElement.classList.contains("dark"));
+    checkDark();
+    
+    const themeObserver = new MutationObserver(checkDark);
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    
+    return () => themeObserver.disconnect();
+  }, []);
+
+  useEffect(() => {
+    fetch(PRIMARY_PROFILE_IMAGE)
+      .then((res) => res.blob())
+      .then((blob) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setProfileSrc(reader.result as string);
+        };
+        reader.readAsDataURL(blob);
+      })
+      .catch((err) => console.error("Failed to load profile image as base64:", err));
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -161,6 +185,11 @@ export const HeroCanvas = () => {
       animationFrameId = requestAnimationFrame(loop);
     });
 
+    const observer = new MutationObserver(() => {
+      htmlToCanvas.update();
+    });
+    observer.observe(source, { childList: true, subtree: true, attributes: true, characterData: true });
+
     window.addEventListener("resize", resize);
     canvas.addEventListener("pointermove", onMove);
 
@@ -170,6 +199,7 @@ export const HeroCanvas = () => {
       }
       window.removeEventListener("resize", resize);
       canvas.removeEventListener("pointermove", onMove);
+      observer.disconnect();
       geometry.dispose();
       material.dispose();
       htmlToCanvas.texture.dispose();
@@ -187,9 +217,9 @@ export const HeroCanvas = () => {
         className="fixed -top-[9999px] left-0 overflow-hidden bg-[#f5f0e8] p-10 text-[#171717]"
         style={{ width: HERO_SOURCE_WIDTH, height: HERO_SOURCE_HEIGHT }}
       >
-        <div className="flex h-full items-end justify-between gap-8 rounded-[28px] border border-[#f1875d]/30 bg-white/80 p-8">
+        <div className={`flex h-full items-end justify-between gap-8 rounded-[28px] border bg-white/80 p-8 ${isDark ? 'border-[#f1875d]/30' : 'border-blue-600/30'}`}>
           <div className="max-w-xl space-y-4">
-            <p className="text-xs uppercase tracking-[0.25em] text-[#f1875d]">Jaipur • IST</p>
+            <p className={`text-xs uppercase tracking-[0.25em] ${isDark ? 'text-[#f1875d]' : 'text-blue-600'}`}>Jaipur • IST</p>
             <h2 style={{ fontFamily: "var(--font-serif)" }} className="text-5xl leading-[1.05] font-semibold">
               I build AI-powered products, intelligent systems, and scalable software that turn ideas into real-world impact.
             </h2>
