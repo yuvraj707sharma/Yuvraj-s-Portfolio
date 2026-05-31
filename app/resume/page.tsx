@@ -165,7 +165,7 @@ const ResumePage = () => (
           <summary className="cursor-pointer list-none text-xl font-semibold" style={{ fontFamily: "var(--font-serif)" }}>
             View 2-page resume
           </summary>
-          <p className="mt-3 text-sm text-muted-foreground">Placeholder viewer: replace with the latest exports at `public/resume/page-1.png` and `public/resume/page-2.png`.</p>
+          <p className="mt-3 text-sm text-muted-foreground">2-page viewer is ready for updated exports as soon as the latest files are added.</p>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <figure className="overflow-hidden rounded-2xl border border-border/60 bg-background p-2">
               <Image src="/resume/page-1.png" alt="Resume page 1 placeholder" width={900} height={1200} className="h-auto w-full rounded-xl object-contain" />

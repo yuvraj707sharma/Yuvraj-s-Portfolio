@@ -36,7 +36,7 @@ export const VitalBandDiagram = () => (
     <path d="M610 107H650" stroke="currentColor" strokeWidth="2" strokeOpacity="0.55" />
     <path d="M610 227H650" stroke="currentColor" strokeWidth="2" strokeOpacity="0.55" />
 
-    <circle cx="420" cy="167" r="6" fill="var(--signature)" />
-    <circle cx="630" cy="167" r="6" fill="var(--signature)" />
+    <circle cx="420" cy="167" r="6" fill="var(--signature)" aria-hidden />
+    <circle cx="630" cy="167" r="6" fill="var(--signature)" aria-hidden />
   </svg>
 );

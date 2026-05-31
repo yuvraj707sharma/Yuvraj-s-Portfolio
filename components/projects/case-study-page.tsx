@@ -98,12 +98,20 @@ export const CaseStudyPage = ({ project, diagram }: CaseStudyPageProps) => {
           Links
         </h2>
         <div className="flex flex-wrap gap-3 text-sm">
-          <a href={project.links.github} target="_blank" rel="noreferrer" className="rounded-full bg-primary px-4 py-2 text-primary-foreground">
-            GitHub
-          </a>
-          <a href={project.links.demo} className="rounded-full border border-border px-4 py-2">
-            Live demo
-          </a>
+          {project.links.github ? (
+            <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="rounded-full bg-primary px-4 py-2 text-primary-foreground">
+              GitHub
+            </a>
+          ) : (
+            <span className="rounded-full bg-primary/60 px-4 py-2 text-primary-foreground/80">GitHub soon</span>
+          )}
+          {project.links.demo ? (
+            <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-4 py-2">
+              Live demo
+            </a>
+          ) : (
+            <span className="rounded-full border border-border px-4 py-2 text-muted-foreground">Live demo soon</span>
+          )}
         </div>
       </section>
 
@@ -119,12 +127,20 @@ export const CaseStudyPage = ({ project, diagram }: CaseStudyPageProps) => {
       </section>
 
       <div className="fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+0.5rem)] z-40 mx-auto flex w-[calc(100%-1.5rem)] max-w-md gap-2 rounded-2xl border border-border/70 bg-background/95 p-2 shadow-sm backdrop-blur md:hidden">
-        <a href={project.links.github} target="_blank" rel="noreferrer" className="flex-1 rounded-xl bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground">
-          GitHub
-        </a>
-        <a href={project.links.demo} className="flex-1 rounded-xl border border-border px-4 py-2 text-center text-sm font-medium">
-          Live demo
-        </a>
+        {project.links.github ? (
+          <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="flex-1 rounded-xl bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground">
+            GitHub
+          </a>
+        ) : (
+          <span className="flex-1 rounded-xl bg-primary/60 px-4 py-2 text-center text-sm font-medium text-primary-foreground/80">GitHub soon</span>
+        )}
+        {project.links.demo ? (
+          <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className="flex-1 rounded-xl border border-border px-4 py-2 text-center text-sm font-medium">
+            Live demo
+          </a>
+        ) : (
+          <span className="flex-1 rounded-xl border border-border px-4 py-2 text-center text-sm font-medium text-muted-foreground">Live demo soon</span>
+        )}
       </div>
     </main>
   );

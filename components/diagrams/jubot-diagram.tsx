@@ -33,7 +33,7 @@ export const JuBotDiagram = () => (
     <path d="M575 130V190" stroke="currentColor" strokeWidth="2" strokeOpacity="0.55" />
     <path d="M670 120H710" stroke="currentColor" strokeWidth="2" strokeOpacity="0.55" />
 
-    <circle cx="450" cy="120" r="6" fill="var(--signature)" />
-    <circle cx="575" cy="160" r="6" fill="var(--signature)" />
+    <circle cx="450" cy="120" r="6" fill="var(--signature)" aria-hidden />
+    <circle cx="575" cy="160" r="6" fill="var(--signature)" aria-hidden />
   </svg>
 );

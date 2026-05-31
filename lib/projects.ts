@@ -14,8 +14,8 @@ export type CaseStudyProject = {
   keyDecisions: string[];
   results: string[];
   links: {
-    github: string;
-    demo: string;
+    github?: string;
+    demo?: string;
   };
 };
 
@@ -49,8 +49,7 @@ export const CASE_STUDY_PROJECTS: CaseStudyProject[] = [
       "Reusable architecture that can extend to department-specific assistants.",
     ],
     links: {
-      github: "https://github.com/yuvraj707sharma",
-      demo: "#",
+      github: "https://github.com/yuvraj707sharma?tab=repositories&q=jubot",
     },
   },
   {
@@ -82,8 +81,7 @@ export const CASE_STUDY_PROJECTS: CaseStudyProject[] = [
       "A modular foundation for adding clinical-grade sensors later.",
     ],
     links: {
-      github: "https://github.com/yuvraj707sharma",
-      demo: "#",
+      github: "https://github.com/yuvraj707sharma?tab=repositories&q=vital",
     },
   },
   {
@@ -115,8 +113,7 @@ export const CASE_STUDY_PROJECTS: CaseStudyProject[] = [
       "Scalable architecture for templates and component libraries.",
     ],
     links: {
-      github: "https://github.com/yuvraj707sharma",
-      demo: "#",
+      github: "https://github.com/yuvraj707sharma?tab=repositories&q=canvas",
     },
   },
 ];

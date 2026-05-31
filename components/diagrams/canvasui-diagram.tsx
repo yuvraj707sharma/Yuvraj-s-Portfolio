@@ -39,7 +39,7 @@ export const CanvasUiDiagram = () => (
     <path d="M345 175V220" stroke="currentColor" strokeWidth="2" strokeOpacity="0.55" />
     <path d="M575 175V220H710" stroke="currentColor" strokeWidth="2" strokeOpacity="0.55" fill="none" />
 
-    <circle cx="460" cy="128" r="6" fill="var(--signature)" />
-    <circle cx="345" cy="197" r="6" fill="var(--signature)" />
+    <circle cx="460" cy="128" r="6" fill="var(--signature)" aria-hidden />
+    <circle cx="345" cy="197" r="6" fill="var(--signature)" aria-hidden />
   </svg>
 );
