@@ -4,6 +4,8 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 
+import { PageTransition } from "@/components/portfolio/page-transition";
+
 const SITE_URL = "https://yuvraj.dev";
 
 export const metadata: Metadata = {
@@ -72,7 +74,9 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
   // Needed because the theme class is persisted client-side.
   <html lang="en" suppressHydrationWarning>
-    <body>{children}</body>
+    <body>
+      <PageTransition>{children}</PageTransition>
+    </body>
     <Analytics />
     <GoogleAnalytics gaId="G-234XRZV28M" />
   </html>
