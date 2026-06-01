@@ -1,51 +1,51 @@
 import {
-  BookOpenIcon,
-  GithubLogoIcon,
-  GridFourIcon,
+  BriefcaseIcon,
+  FileTextIcon,
+  FlaskIcon,
+  HouseIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 
 const NAV_LINKS = [
   {
-    href: "https://tympanus.net/codrops/2026/05/13/exploring-the-html-in-canvas-proposal",
-    label: "Tutorial",
-    Icon: BookOpenIcon,
+    href: "/",
+    label: "Portfolio",
+    Icon: HouseIcon,
   },
   {
-    href: "https://github.com/motiontx/html-in-canvas",
-    label: "GitHub",
-    Icon: GithubLogoIcon,
+    href: "/resume",
+    label: "Resume",
+    Icon: FileTextIcon,
   },
   {
-    href: "https://tympanus.net/codrops/hub",
-    label: "All demos",
-    Icon: GridFourIcon,
+    href: "/labs",
+    label: "Labs",
+    Icon: FlaskIcon,
   },
 ];
 
 export const Header = () => (
   <header className="sticky top-0 z-50 flex items-center justify-between p-4">
-    <Link
-      href="/"
-      className="text-background text-md font-semibold tracking-tight whitespace-nowrap"
-    >
-      HTML-in-Canvas Experiments
+    <Link href="/examples/getting-started" className="text-md font-semibold tracking-tight text-background whitespace-nowrap">
+      Examples · Internal demos
     </Link>
-    <nav aria-label="Primary" className="flex items-center gap-4 text-sm">
+    <nav aria-label="Examples navigation" className="flex items-center gap-3 text-sm">
       {NAV_LINKS.map(({ href, label, Icon }) => (
         <Link
           key={href}
           href={href}
-          target="_blank"
-          rel="noopener noreferrer"
           aria-label={label}
           title={label}
-          className="text-background/70 hover:text-background transition-colors flex items-center gap-2"
+          className="flex items-center gap-1.5 rounded-full border border-background/20 px-3 py-1 text-background/80 transition-colors hover:text-background"
         >
           <Icon className="size-4" aria-hidden />
           <span className="hidden sm:inline">{label}</span>
         </Link>
       ))}
+      <span className="hidden items-center gap-1.5 rounded-full border border-background/20 px-3 py-1 text-background/65 sm:inline-flex">
+        <BriefcaseIcon className="size-4" aria-hidden />
+        Examples
+      </span>
     </nav>
   </header>
 );

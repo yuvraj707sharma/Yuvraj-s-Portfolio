@@ -9,47 +9,11 @@ import { Magnetic } from "@/components/portfolio/magnetic";
 import { SmoothScroll } from "@/components/portfolio/smooth-scroll";
 import { ThemeToggle } from "@/components/portfolio/theme-toggle";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
-const projects = [
-  {
-    name: "JUbot",
-    description:
-      "AI-powered university assistant for admissions, student support, and information retrieval.",
-    stack: ["Next.js", "FastAPI", "Gemini", "ChromaDB", "PostgreSQL", "Redis"],
-    featured: true,
-  },
-  {
-    name: "Vital Band",
-    description:
-      "Smart wearable health companion focused on activity tracking, behavior change, and preventive health.",
-    stack: ["ESP32", "Flutter", "BLE", "Edge Impulse", "Arduino"],
-  },
-  {
-    name: "CanvasUI",
-    description:
-      "Canva-inspired visual UI builder converting drag-and-drop interfaces into production-ready designs.",
-    stack: ["React", "TypeScript", "Zustand", "Tailwind"],
-  },
-  {
-    name: "Project Placeholder 04",
-    description: "New case study coming soon.",
-    stack: ["TBD"],
-  },
-  {
-    name: "Project Placeholder 05",
-    description: "New case study coming soon.",
-    stack: ["TBD"],
-  },
-  {
-    name: "Project Placeholder 06",
-    description: "New case study coming soon.",
-    stack: ["TBD"],
-  },
-];
+import { CASE_STUDY_PROJECTS } from "@/lib/projects";
 
 const Page = () => {
-  const featuredProject = projects.find((project) => project.featured) ?? projects[0];
-  const compactProjects = projects.filter((project) => project !== featuredProject);
+  const featuredProject = CASE_STUDY_PROJECTS[0];
+  const compactProjects = CASE_STUDY_PROJECTS.slice(1);
 
   return (
     <>
@@ -61,13 +25,16 @@ const Page = () => {
           <a href="#home" className="text-sm font-semibold tracking-tight" data-cursor-label="Home">
             Yuvraj Sharma
           </a>
-          <nav className="hidden items-center gap-5 text-xs uppercase tracking-[0.14em] text-muted-foreground sm:flex">
+          <nav className="hidden items-center gap-5 text-xs tracking-[0.14em] text-muted-foreground uppercase sm:flex">
             <a href="#projects" data-cursor-label="Projects" className="hover:text-foreground">
               Projects
             </a>
             <a href="#about" data-cursor-label="About" className="hover:text-foreground">
               About
             </a>
+            <Link href="/projects" data-cursor-label="Case Studies" className="hover:text-foreground">
+              Case studies
+            </Link>
             <Link href="/resume" data-cursor-label="Resume" className="hover:text-foreground">
               Resume
             </Link>
@@ -85,7 +52,7 @@ const Page = () => {
       <main id="home" className="mx-auto w-full max-w-6xl space-y-12 px-4 py-10 md:space-y-20 md:py-14">
         <section className="grid gap-6 md:grid-cols-[1.1fr_1fr] md:items-end">
           <div className="space-y-6">
-            <p className="text-xs uppercase tracking-[0.25em] text-primary">Product Builder & Software Developer</p>
+            <p className="text-xs tracking-[0.25em] text-[var(--signature)] uppercase">Product Builder & Software Developer</p>
             <h1 className="text-balance text-4xl leading-tight font-semibold md:text-6xl" style={{ fontFamily: "var(--font-serif)" }}>
               I build AI-powered products, intelligent systems, and scalable software that turn ideas into real-world impact.
             </h1>
@@ -114,7 +81,7 @@ const Page = () => {
               </Magnetic>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.14em] text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-4 text-xs tracking-[0.14em] text-muted-foreground uppercase">
               <a href="https://github.com/yuvraj707sharma" target="_blank" rel="noopener noreferrer" data-cursor-label="GitHub" className="hover:text-foreground">
                 GitHub
               </a>
@@ -134,53 +101,65 @@ const Page = () => {
 
         <section id="projects" className="space-y-6">
           <div className="space-y-3">
-            <p className="text-xs uppercase tracking-[0.2em] text-primary">Selected Projects</p>
+            <p className="text-xs tracking-[0.2em] text-[var(--signature)] uppercase">Selected Projects</p>
             <h2 className="text-3xl font-semibold md:text-5xl" style={{ fontFamily: "var(--font-serif)" }}>
-              One featured build, five rapid experiments.
+              Three product-led builds, each documented end to end.
             </h2>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <Magnetic className="md:col-span-2">
-              <Card className="border border-border/60 bg-card/90 md:p-3" data-cursor-label={featuredProject.name}>
-                <CardHeader>
-                  <p className="text-xs uppercase tracking-[0.15em] text-primary">Featured</p>
-                  <CardTitle className="text-3xl" style={{ fontFamily: "var(--font-serif)" }}>
-                    {featuredProject.name}
-                  </CardTitle>
-                  <CardDescription className="max-w-2xl text-base text-muted-foreground">
-                    {featuredProject.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {featuredProject.stack.map((item) => (
-                      <span key={item} className="rounded-full border border-border/70 px-3 py-1 text-xs text-muted-foreground">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </Magnetic>
-
-            {compactProjects.map((project) => (
-              <Magnetic key={project.name}>
-                <Card className="h-full border border-border/60 bg-card/90" data-cursor-label={project.name}>
+              <Link href={`/projects/${featuredProject.slug}`} className="block" data-cursor-label={featuredProject.name}>
+                <Card className="border border-border/60 bg-card/90 md:p-3">
                   <CardHeader>
-                    <CardTitle>{project.name}</CardTitle>
-                    <CardDescription>{project.description}</CardDescription>
+                    <p className="text-xs tracking-[0.15em] text-[var(--signature)] uppercase">Featured</p>
+                    <CardTitle className="text-3xl" style={{ fontFamily: "var(--font-serif)" }}>
+                      {featuredProject.name}
+                    </CardTitle>
+                    <CardDescription className="max-w-2xl text-base text-muted-foreground">{featuredProject.description}</CardDescription>
+                    <p className="text-sm text-foreground">{featuredProject.role}</p>
+                    <p className="text-sm text-muted-foreground">{featuredProject.outcome}</p>
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
-                      {project.stack.map((item) => (
-                        <span key={item} className="rounded-full border border-border/70 px-2 py-1 text-[11px] text-muted-foreground">
+                      {featuredProject.stack.map((item) => (
+                        <span key={item} className="rounded-full border border-border/70 px-3 py-1 text-xs text-muted-foreground">
                           {item}
                         </span>
                       ))}
                     </div>
+                    <span className="mt-5 inline-flex rounded-full border border-border px-4 py-2 text-sm transition hover:border-[var(--signature)]">
+                      Open case study
+                    </span>
                   </CardContent>
                 </Card>
+              </Link>
+            </Magnetic>
+
+            {compactProjects.map((project) => (
+              <Magnetic key={project.slug}>
+                <Link href={`/projects/${project.slug}`} className="block h-full" data-cursor-label={project.name}>
+                  <Card className="h-full border border-border/60 bg-card/90">
+                    <CardHeader>
+                      <CardTitle>{project.name}</CardTitle>
+                      <CardDescription>{project.tagline}</CardDescription>
+                      <p className="text-sm text-foreground">{project.role}</p>
+                      <p className="text-sm text-muted-foreground">{project.outcome}</p>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-wrap gap-2">
+                        {project.stack.map((item) => (
+                          <span key={item} className="rounded-full border border-border/70 px-2 py-1 text-[11px] text-muted-foreground">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                      <span className="mt-5 inline-flex rounded-full border border-border px-4 py-2 text-sm transition hover:border-[var(--signature)]">
+                        Open case study
+                      </span>
+                    </CardContent>
+                  </Card>
+                </Link>
               </Magnetic>
             ))}
           </div>
@@ -189,7 +168,7 @@ const Page = () => {
         <ClipScrollSection />
 
         <section className="rounded-3xl border border-border/60 bg-card p-6 md:p-10">
-          <p className="text-xs uppercase tracking-[0.2em] text-primary">Contact</p>
+          <p className="text-xs tracking-[0.2em] text-[var(--signature)] uppercase">Contact</p>
           <h3 className="mt-2 text-3xl font-semibold md:text-5xl" style={{ fontFamily: "var(--font-serif)" }}>
             Let’s build something real.
           </h3>
@@ -202,6 +181,9 @@ const Page = () => {
             </a>
             <Link href="/resume" className="rounded-full border border-border px-5 py-2" data-cursor-label="Resume">
               Resume
+            </Link>
+            <Link href="/projects" className="rounded-full border border-border px-5 py-2" data-cursor-label="Projects">
+              Projects
             </Link>
             <Link href="/labs" className="rounded-full border border-border px-5 py-2" data-cursor-label="Labs">
               Labs
