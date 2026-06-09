@@ -7,7 +7,7 @@ import fallbackProfile from "@/TextClipScroll/img/2.jpg";
 
 const HERO_SOURCE_WIDTH = 1200;
 const HERO_SOURCE_HEIGHT = 750;
-const PRIMARY_PROFILE_IMAGE = "/images/yuvraj-clean.jpg";
+const PRIMARY_PROFILE_IMAGE = "/images/yuvraj-hero.jpg";
 
 class HtmlToCanvas {
   private element: HTMLElement;
@@ -107,16 +107,34 @@ export const HeroCanvas = () => {
   }, []);
 
   useEffect(() => {
+    let isCancelled = false;
+
     fetch(PRIMARY_PROFILE_IMAGE)
-      .then((res) => res.blob())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        return res.blob();
+      })
       .then((blob) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          setProfileSrc(reader.result as string);
+          if (!isCancelled && typeof reader.result === "string") {
+            setProfileSrc(reader.result);
+          }
         };
         reader.readAsDataURL(blob);
       })
-      .catch((err) => console.error("Failed to load profile image as base64:", err));
+      .catch((err) => {
+        console.error("Failed to load profile image as base64:", err);
+        if (!isCancelled) {
+          setProfileSrc("/images/yuvraj-clean.jpg");
+        }
+      });
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   useEffect(() => {
