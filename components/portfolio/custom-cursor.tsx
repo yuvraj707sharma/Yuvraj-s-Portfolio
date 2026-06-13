@@ -6,14 +6,13 @@ type CursorState = { x: number; y: number; label: string };
 
 export const CustomCursor = () => {
   const [cursor, setCursor] = useState<CursorState>({ x: 0, y: 0, label: "" });
-  const [enabled] = useState(() => {
-    if (typeof window === "undefined") {
-      return false;
-    }
+  const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const finePointer = window.matchMedia("(pointer: fine)").matches;
-    return !prefersReducedMotion && finePointer;
-  });
+    setEnabled(!prefersReducedMotion && finePointer);
+  }, []);
 
   useEffect(() => {
     if (!enabled) {

@@ -4,7 +4,6 @@ import { AmbientAudioToggle } from "@/components/portfolio/ambient-audio-toggle"
 import { ClipScrollSection } from "@/components/portfolio/clip-scroll-section";
 import { CustomCursor } from "@/components/portfolio/custom-cursor";
 import { GommageTransition } from "@/components/portfolio/gommage-transition";
-import { HeroCanvas } from "@/components/portfolio/hero-canvas";
 import { Magnetic } from "@/components/portfolio/magnetic";
 import { SmoothScroll } from "@/components/portfolio/smooth-scroll";
 import { ThemeToggle } from "@/components/portfolio/theme-toggle";
@@ -50,17 +49,17 @@ const Page = () => {
       </header>
 
       <main id="home" className="mx-auto w-full max-w-6xl space-y-12 px-4 py-10 md:space-y-20 md:py-14">
-        <section className="grid gap-6 md:grid-cols-[1.1fr_1fr] md:items-end">
-          <div className="space-y-6">
+        <section className="mx-auto max-w-4xl py-12 md:py-20 text-center flex flex-col items-center justify-center space-y-8">
+          <div className="max-w-3xl space-y-6">
             <p className="text-xs tracking-[0.25em] text-[var(--signature)] uppercase">Product Builder & Software Developer</p>
             <h1 className="text-balance text-4xl leading-tight font-semibold md:text-6xl" style={{ fontFamily: "var(--font-serif)" }}>
               I build AI-powered products, intelligent systems, and scalable software that turn ideas into real-world impact.
             </h1>
-            <p className="max-w-xl text-sm text-muted-foreground md:text-base">
+            <p className="mx-auto max-w-xl text-sm text-muted-foreground md:text-base">
               Yuvraj Sharma · Jaipur, Rajasthan, India (IST)
             </p>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap items-center justify-center gap-3">
               <Magnetic>
                 <a
                   href="#projects"
@@ -81,7 +80,7 @@ const Page = () => {
               </Magnetic>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 text-xs tracking-[0.14em] text-muted-foreground uppercase">
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs tracking-[0.14em] text-muted-foreground uppercase">
               <a href="https://github.com/yuvraj707sharma" target="_blank" rel="noopener noreferrer" data-cursor-label="GitHub" className="hover:text-foreground">
                 GitHub
               </a>
@@ -93,8 +92,6 @@ const Page = () => {
               </a>
             </div>
           </div>
-
-          <HeroCanvas />
         </section>
 
         <GommageTransition />
